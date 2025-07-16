@@ -94,13 +94,26 @@ scores['bin'] = pd.cut(scores['dist'], bins=bins, labels=False)
 
 # plot results
 markers = ["^", "s", "o"]
+palette = ['#0072B2', '#D55E00', '#009E73']
 fig = plt.figure()
 ax = plt.subplot()
 for i in range(len(bins) - 1):
     binned_data = scores[scores['bin'] == i]
-    disp = CalibrationDisplay.from_predictions(binned_data['y'], binned_data['pred'], n_bins=3,
-                                               name=f"{bins[i]} - {bins[i + 1]}", marker=markers[i],
-                                               ax=ax)
+    n_bins = 2
+    if i == 0:
+        n_bins = 3
 
-ax.legend(loc='upper left')
+    # Plot calibration curve
+    disp = CalibrationDisplay.from_predictions(binned_data['y'], binned_data['pred'], n_bins=n_bins,
+                                               name=f"{bins[i]} - {bins[i + 1]}",
+                                               marker=markers[i],
+                                               color=palette[i],
+                                               ax=ax)
+    ax.set_ylabel("Fraction of Positives", fontsize=13)
+    ax.set_xlabel("Mean Predicted Probability", fontsize=13)
+    ax.set_yticklabels(ax.get_yticklabels(), fontsize=12)
+    ax.set_xticklabels(ax.get_xticklabels(), fontsize=12)
+
+ax.legend(frameon=False, loc='upper left', fontsize=11)
+plt.tight_layout()
 plt.show()

@@ -110,17 +110,21 @@ for transformer_name, transformer_info in transformers.items():
 
 sns.set_context('notebook')
 sns.set(rc={'figure.figsize': (4, 3)}, font_scale=1.5)
-sns.set_style('whitegrid')
+sns.set_style('white')
 figure, axes = plt.subplots(1, 2, sharex=False, sharey=False, figsize=(16, 8))
 
 for i, stat in enumerate(['accuracy', 'ROC AUC']):
     friedman = pg.friedman(cv_results_allmethods, dv=stat, within="method", subject="cv cycle")['p-unc'].values[0]
-    ax = sns.boxplot(y=stat, x="method", ax=axes[i], data=cv_results_allmethods)
-    ax.set_title(f"p={friedman:.03f}")
+    print(f"p={friedman:.03f}")
+
+    ax = sns.boxplot(y=stat, x="method", ax=axes[i], data=cv_results_allmethods, palette=['lightblue', 'lightpink', 'lightgreen', 'lightsalmon'], linewidth=3, linecolor='k')
+    for spine in ax.spines.values():
+        spine.set_linewidth(3)
     ax.set_xlabel("")
-    ax.set_ylabel(stat.upper())
+    ax.set_ylabel(stat, fontsize=20)
     ax.set_ylim(0.5, 1)
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+    ax.set_yticklabels(ax.get_yticklabels(), fontsize=20)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, fontsize=20)
 plt.tight_layout()
 plt.show()
 
